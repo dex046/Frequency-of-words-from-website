@@ -4,21 +4,21 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
 """
-__author__="tina"
-__mtime__ = '2016/10/9  10:39'
+__author__="dwx"
+__mtime__ = '2016/10/9  11:39'
 """
 import scrapy
 from scrapy.selector import Selector
 
 class ArtileSpider(scrapy.Spider):
     name = "article"
-    allowed_domains = ["aint-bad.com"]
+    allowed_domains = ["netex.nmartproject.net"]
     start_urls = (
-        'https://www.aint-bad.com/category/article/',
+        'http://netex.nmartproject.net/',
     )
 
     def parse(self, response):
-        link = 'https://www.aint-bad.com/article/page/'
+        link = 'http://netex.nmartproject.net/page/'
         for index in xrange(1):
             yield scrapy.Request(link+str(index+1), callback=self.parseSubclass)
 

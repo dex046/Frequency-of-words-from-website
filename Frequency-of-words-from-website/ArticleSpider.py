@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-import sys
 
+#sovle the encode of chinese
+import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
 """
@@ -11,24 +12,27 @@ import scrapy
 from scrapy.selector import Selector
 
 class ArtileSpider(scrapy.Spider):
+    '''
+    to create a Spider, you need extends form scrapy.Spider object, and define following three attributes and methods:
+    name: id
+    start_urls
+    parse()
+    '''
     name = "article"
-    allowed_domains = ["https://www.aint-bad.com"]
+    allowed_domains = ["aint-bad.com"]
     start_urls = (
         'https://www.aint-bad.com/category/article/',
     )
 
     def parse(self, response):
-        sel = Selector(response)
         link = 'https://www.aint-bad.com/article/page/'
-        print sel
-        for index in xrange(50):
+        for index in xrange(1):
             yield scrapy.Request(link+str(index+1), callback=self.parseSubclass)
 
 
     def parseSubclass(self, response):
-
         sel = Selector(response)
-        subClass = sel.xpath('//article/header/h2/a')
+        subClass = sel.xpath('//article/h2/a')
         for sub in subClass:
             name = sub.xpath('text()').extract()[0]
             link = sub.xpath('@href').extract()[0]
@@ -37,18 +41,17 @@ class ArtileSpider(scrapy.Spider):
 
     def parseContent(self, response):
         filename = response.meta['name']
-        print filename
-        fileClass = open('content'+filename+".txt",'w')
+        fileClass = open(filename+".txt",'w')
         content = ''
         sel = Selector(response)
         detai = sel.xpath('//*[@class="entry-content"]/p//text()').extract()
         for con in detai:
-            print con
-            content += con
-        print content
+            content += con + '\n'
         fileClass.write(content)
         fileClass.flush()
         fileClass.close()
+
+
 
 
 
